@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "websearch_aiplugin": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7298",
+      "launchBrowser": false
+    }
+  }
+}
