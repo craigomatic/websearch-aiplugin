@@ -4,6 +4,10 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
   },
+  "Host": {
+    "LocalHttpPort": 7298,
+    "CORS": "*"
+  },
   "AppConfig": {
     "BingApiKey": ""
   }

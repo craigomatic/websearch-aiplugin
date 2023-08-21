@@ -16,9 +16,9 @@ You'll need to have all the same values listed above entered into Configuration 
 ## Usage
 Run it locally with this command:
 
-```func run```
+```func start```
 
-You can test functionality using the swagger UI, which will default to: http://localhost:7071/api/swagger/ui
+You can test functionality using the swagger UI, which will default to: http://localhost:7298/api/swagger/ui
 
 Once you've verified it locally using swagger, the next step is to try running it in the context of _other_ AI.
 
