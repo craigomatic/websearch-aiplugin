@@ -36,6 +36,7 @@ public class PluginEndpoint
     [OpenApiParameter(name: "Query", Description = "The query", Required = true, In = ParameterLocation.Query)]
     [OpenApiParameter(name: "NumResults", Description = "The maximum number of results to return", Required = true, In = ParameterLocation.Query)]
     [OpenApiParameter(name: "Offset", Description = "The number of results to skip", Required = false, In = ParameterLocation.Query)]
+    [OpenApiParameter(name: "Site", Description = "The specific site to search within.", Required = false, In = ParameterLocation.Query)]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "Returns a collection of search results with the name, URL and snippet for each.")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.BadRequest, contentType: "application/json", bodyType: typeof(string), Description = "Returns the error of the input.")]
     [Function("WebSearch")]
@@ -58,11 +59,22 @@ public class PluginEndpoint
         var offset = req.Query("Offset").FirstOrDefault();
         var offsetInt = offset == null ? 0 : int.Parse(offset);
 
-        _logger.LogInformation($"Starting search for: {query}");
+        var site = req.Query("Site").FirstOrDefault(string.Empty);
+
+        if (string.IsNullOrWhiteSpace(site))
+        {
+            _logger.LogInformation($"Starting search for: {query}");
+        }
+        else
+        {
+            _logger.LogInformation($"Starting search within {site} for: {query}");
+        }
+        
 
         using (var httpClient = new HttpClient())
         {
-            var uri = new Uri($"https://api.bing.microsoft.com/v7.0/search?q={Uri.EscapeDataString(query)}&count={numResults}&offset={offsetInt}");
+            var siteQueryString = string.IsNullOrWhiteSpace(site) ? string.Empty : $"+site:{site}";
+            var uri = new Uri($"https://api.bing.microsoft.com/v7.0/search?q={Uri.EscapeDataString(query)}{siteQueryString}&count={numResults}&offset={offsetInt}");
             httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _appConfig.BingApiKey);
 
             var json = await httpClient.GetStringAsync(uri);
